@@ -1,8 +1,20 @@
 {
-    "name": "turbodev/response_wrapper",
-    "description": "Response wrapper",
+    "name": "turbodev/logging_request_provider",
+    "description": "Logging request provider",
+    "repositories":[
+        {
+            "type": "vcs",
+            "url": "git@github.com:almatyartem/guzzle_wrapper.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:almatyartem/response_wrapper.git"
+        }
+    ],
     "require": {
         "php": "^7.4|^8.0",
+        "turbodev/guzzle_wrapper": "dev-master",
+        "illuminate/support": "*",
         "ext-json": "*"
     },
     "minimum-stability": "dev",
@@ -12,7 +24,7 @@
             "src"
         ],
         "psr-4": {
-            "ResponseWrapper\\": "src/"
+            "LoggingRequestProvider\\": "src/"
         }
     }
 }
