@@ -2,11 +2,10 @@
 
 namespace LoggingRequestProvider;
 
-use GuzzleWrapper\LoggerInterface;
-use GuzzleWrapper\ResponseWrapper;
 use Illuminate\Support\Facades\Log;
+use RpContracts\Response;
 
-class Logger implements LoggerInterface
+class Logger implements \RpContracts\Logger
 {
     const STRATEGY_DISABLED = 0;
     const STRATEGY_LOG_EXCEPTIONS = 1;
@@ -56,9 +55,9 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * @param ResponseWrapper $response
+     * @param Response $response
      */
-    protected function logResponse(ResponseWrapper $response)
+    protected function logResponse(Response $response)
     {
         Log::info('Response: '.$response->getRawContents());
     }
@@ -72,11 +71,11 @@ class Logger implements LoggerInterface
     }
 
     /**
-     * @param ResponseWrapper $result
+     * @param Response $result
      * @param array $requestData
      * @return mixed|void
      */
-    public function log(ResponseWrapper $result, array $requestData)
+    public function log(Response $result, array $requestData)
     {
         if($this->logRequests())
         {
