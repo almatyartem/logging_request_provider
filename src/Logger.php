@@ -1,6 +1,6 @@
 <?php
 
-namespace LoggingRequestProvider;
+namespace RpLaravelBridge;
 
 use Illuminate\Support\Facades\Log;
 use RpContracts\Response;

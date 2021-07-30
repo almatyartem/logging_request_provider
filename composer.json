@@ -1,6 +1,6 @@
 {
-    "name": "turbodev/logging_request_provider",
-    "description": "Logging request provider",
+    "name": "turbodev/rp_laravel_bridge",
+    "description": "Bridge between rp_contracts and Laravel",
     "repositories":[
         {
             "type": "vcs",
@@ -20,7 +20,7 @@
             "src"
         ],
         "psr-4": {
-            "LoggingRequestProvider\\": "src/"
+            "RpLaravelBridge\\": "src/"
         }
     }
 }
