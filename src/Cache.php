@@ -13,12 +13,19 @@ class Cache extends \Illuminate\Support\Facades\Cache implements \RpContracts\Ca
     protected string $prefix;
 
     /**
+     * @var int|null
+     */
+    protected ?int $defaultTtl;
+
+    /**
      * Cache constructor.
      * @param string $prefix
+     * @param int|null $defaultTtl
      */
-    public function __construct(string $prefix)
+    public function __construct(string $prefix, int $defaultTtl = null)
     {
         $this->prefix = $prefix;
+        $this->defaultTtl = $defaultTtl;
     }
 
     /**
@@ -29,7 +36,7 @@ class Cache extends \Illuminate\Support\Facades\Cache implements \RpContracts\Ca
      */
     public function put(string $uri, Response $result, int $ttl = null): bool
     {
-        return \Illuminate\Support\Facades\Cache::put($this->getkey($uri), $result, $ttl);
+        return \Illuminate\Support\Facades\Cache::put($this->getkey($uri), $result, $ttl ?? $this->defaultTtl);
     }
 
     /**
