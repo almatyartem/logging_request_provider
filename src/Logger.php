@@ -51,7 +51,7 @@ class Logger implements \RpContracts\Logger
      */
     protected function logException(\Throwable $exception)
     {
-        Log::error('Exception: '.$exception->getMessage());
+        Log::error('Exception: '.$exception->getFile().':'.$exception->getLine().' '.$exception->getMessage());
     }
 
     /**
