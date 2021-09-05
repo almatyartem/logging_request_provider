@@ -96,7 +96,7 @@ class Logger implements \RpContracts\Logger
         {
             $this->logResponse($result);
         }
-        if($this->logExceptions() and $errors = $result->getErrorsBag() and !array_search($result->getStatusCode(), $this->excludeStatusCodes))
+        if($this->logExceptions() and $errors = $result->getErrorsBag() and array_search($result->getStatusCode(), $this->excludeStatusCodes) === false)
         {
             foreach($errors as $error)
             {
