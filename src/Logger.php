@@ -16,9 +16,20 @@ class Logger implements \RpContracts\Logger
      */
     protected int $strategy;
 
-    public function __construct(int $strategy = self::STRATEGY_LOG_EXCEPTIONS)
+    /**
+     * @var array
+     */
+    protected array $excludeStatusCodes = [];
+
+    /**
+     * Logger constructor.
+     * @param int $strategy
+     * @param array $excludeStatusCodes
+     */
+    public function __construct(int $strategy = self::STRATEGY_LOG_EXCEPTIONS, array $excludeStatusCodes = [])
     {
         $this->strategy = $strategy;
+        $this->excludeStatusCodes = $excludeStatusCodes;
     }
 
     /**
@@ -85,7 +96,7 @@ class Logger implements \RpContracts\Logger
         {
             $this->logResponse($result);
         }
-        if($this->logExceptions() and $errors = $result->getErrorsBag())
+        if($this->logExceptions() and $errors = $result->getErrorsBag() and !array_search($result->getStatusCode(), $this->excludeStatusCodes))
         {
             foreach($errors as $error)
             {
