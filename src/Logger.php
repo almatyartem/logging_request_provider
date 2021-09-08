@@ -88,19 +88,24 @@ class Logger implements \RpContracts\Logger
      */
     public function log(Response $result, array $requestData)
     {
-        if($this->logRequests())
-        {
-            $this->logRequest($requestData);
-        }
-        if($this->logResponses())
-        {
-            $this->logResponse($result);
-        }
         if($this->logExceptions() and $errors = $result->getErrorsBag() and array_search($result->getStatusCode(), $this->excludeStatusCodes) === false)
         {
             foreach($errors as $error)
             {
                 $this->logException($error);
+            }
+            $this->logRequest($requestData);
+            $this->logResponse($result);
+        }
+        else
+        {
+            if($this->logRequests())
+            {
+                $this->logRequest($requestData);
+            }
+            if($this->logResponses())
+            {
+                $this->logResponse($result);
             }
         }
     }
