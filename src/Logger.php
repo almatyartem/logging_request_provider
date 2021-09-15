@@ -88,7 +88,7 @@ class Logger implements \RpContracts\Logger
      */
     public function log(Response $result, array $requestData)
     {
-        if($this->logExceptions() and $errors = $result->getErrorsBag() and array_search($result->getStatusCode(), $this->excludeStatusCodes) === false)
+        if($this->logExceptions() and ($errors = $result->getErrorsBag()) and array_search($result->getStatusCode(), $this->excludeStatusCodes) === false)
         {
             foreach($errors as $error)
             {
