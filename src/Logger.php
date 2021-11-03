@@ -10,6 +10,7 @@ class Logger implements \RpContracts\Logger
     const STRATEGY_DISABLED = 0;
     const STRATEGY_LOG_EXCEPTIONS = 1;
     const STRATEGY_DEBUG = 2;
+    const REQUEST_AND_RESPONSE_LENGTH_LIMIT = 1000;
 
     /**
      * @var int
@@ -70,7 +71,10 @@ class Logger implements \RpContracts\Logger
      */
     protected function logResponse(Response $response)
     {
-        Log::info('Response: '.$response->getRawContents());
+        $responseContents = $response->getRawContents();
+        $maxLength = self::REQUEST_AND_RESPONSE_LENGTH_LIMIT;
+
+        Log::info('Response: '.($maxLength ? substr($responseContents, 0, $maxLength).'...' : $responseContents));
     }
 
     /**
@@ -78,7 +82,10 @@ class Logger implements \RpContracts\Logger
      */
     protected function logRequest(array $requestData)
     {
-        Log::info('Request params: '.json_encode($requestData));
+        $contents = json_encode($requestData);
+        $maxLength = self::REQUEST_AND_RESPONSE_LENGTH_LIMIT;
+
+        Log::info('Request params: '.($maxLength ? substr($contents, 0, $maxLength).'...' : $contents));
     }
 
     /**
