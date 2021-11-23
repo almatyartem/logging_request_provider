@@ -10,6 +10,7 @@ class Logger implements \RpContracts\Logger
     const STRATEGY_DISABLED = 0;
     const STRATEGY_LOG_EXCEPTIONS = 1;
     const STRATEGY_DEBUG = 2;
+    const STRATEGY_LOG_REQUESTS_WHEN_EXCEPTION = 3;
     const REQUEST_AND_RESPONSE_LENGTH_LIMIT = 1000;
 
     /**
@@ -46,7 +47,7 @@ class Logger implements \RpContracts\Logger
      */
     protected function logRequests() : bool
     {
-        return in_array($this->strategy, [self::STRATEGY_DEBUG]);
+        return in_array($this->strategy, [self::STRATEGY_DEBUG, self::STRATEGY_LOG_REQUESTS_WHEN_EXCEPTION]);
     }
 
     /**
