@@ -96,7 +96,14 @@ class Logger implements \RpContracts\Logger
      */
     public function log(Response $result, array $requestData)
     {
-        if($this->logExceptions() and ($errors = $result->getErrorsBag()) and array_search($result->getStatusCode(), $this->excludeStatusCodes) === false)
+        $errors = $result->getErrorsBag();
+
+        if($errors and $this->strategy == self::STRATEGY_LOG_REQUESTS_WHEN_EXCEPTION)
+        {
+            Log::error('Request failed');
+        }
+
+        if($this->logExceptions() and $errors and array_search($result->getStatusCode(), $this->excludeStatusCodes) === false)
         {
             foreach($errors as $error)
             {
