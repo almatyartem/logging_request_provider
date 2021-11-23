@@ -43,11 +43,12 @@ class Logger implements \RpContracts\Logger
     }
 
     /**
+     * @param array|null $errors
      * @return bool
      */
-    protected function logRequests() : bool
+    protected function logRequests(array $errors = null) : bool
     {
-        return in_array($this->strategy, [self::STRATEGY_DEBUG, self::STRATEGY_LOG_REQUESTS_WHEN_EXCEPTION]);
+        return in_array($this->strategy, [self::STRATEGY_DEBUG]);
     }
 
     /**
@@ -98,12 +99,12 @@ class Logger implements \RpContracts\Logger
     {
         $errors = $result->getErrorsBag();
 
-        if($errors and $this->strategy == self::STRATEGY_LOG_REQUESTS_WHEN_EXCEPTION)
+        if(($this->strategy == self::STRATEGY_LOG_REQUESTS_WHEN_EXCEPTION) and $errors)
         {
-            Log::error('Request failed');
+            Log::error('Request failed. Url: '.($requestData['url'] ?? ''));
+            return true;
         }
-
-        if($this->logExceptions() and $errors and array_search($result->getStatusCode(), $this->excludeStatusCodes) === false)
+        elseif($this->logExceptions() and $errors and array_search($result->getStatusCode(), $this->excludeStatusCodes) === false)
         {
             foreach($errors as $error)
             {
@@ -114,7 +115,7 @@ class Logger implements \RpContracts\Logger
         }
         else
         {
-            if($this->logRequests())
+            if($this->logRequests($errors))
             {
                 $this->logRequest($requestData);
             }
