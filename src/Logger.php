@@ -10,7 +10,7 @@ class Logger implements \RpContracts\Logger
     const STRATEGY_DISABLED = 0;
     const STRATEGY_LOG_EXCEPTIONS = 1;
     const STRATEGY_DEBUG = 2;
-    const STRATEGY_LOG_REQUESTS_WHEN_EXCEPTION = 3;
+    const STRATEGY_LOG_REQUESTS_WHEN_EXCEPTION = 3; //only when failed
     const REQUEST_AND_RESPONSE_LENGTH_LIMIT = 1000;
 
     /**
@@ -99,7 +99,7 @@ class Logger implements \RpContracts\Logger
     {
         $errors = $result->getErrorsBag();
 
-        if(($this->strategy == self::STRATEGY_LOG_REQUESTS_WHEN_EXCEPTION) and $errors)
+        if(($this->strategy == self::STRATEGY_LOG_REQUESTS_WHEN_EXCEPTION) and !$result->isSuccess() and $errors)
         {
             Log::error('Request failed. Url: '.($requestData['url'] ?? ''));
             return true;
