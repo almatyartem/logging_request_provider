@@ -19,6 +19,11 @@ class Logger implements \RpContracts\Logger
     protected int $strategy;
 
     /**
+     * @var string|null
+     */
+    protected ?string $channel;
+
+    /**
      * @var array
      */
     protected array $excludeStatusCodes = [];
@@ -27,10 +32,12 @@ class Logger implements \RpContracts\Logger
      * Logger constructor.
      * @param int $strategy
      * @param array $excludeStatusCodes
+     * @param string|null $channel
      */
-    public function __construct(int $strategy = self::STRATEGY_LOG_EXCEPTIONS, array $excludeStatusCodes = [])
+    public function __construct(int $strategy = self::STRATEGY_LOG_EXCEPTIONS, array $excludeStatusCodes = [], string $channel = null)
     {
         $this->strategy = $strategy;
+        $this->channel = $channel;
         $this->excludeStatusCodes = $excludeStatusCodes;
     }
 
@@ -65,7 +72,7 @@ class Logger implements \RpContracts\Logger
      */
     protected function logException(\Throwable $exception)
     {
-        Log::error('Exception: '.$exception->getFile().':'.$exception->getLine().' '.$exception->getMessage());
+        Log::channel($this->channel)->error('Exception: '.$exception->getFile().':'.$exception->getLine().' '.$exception->getMessage());
     }
 
     /**
@@ -76,7 +83,7 @@ class Logger implements \RpContracts\Logger
         $responseContents = $response->getRawContents();
         $maxLength = self::REQUEST_AND_RESPONSE_LENGTH_LIMIT;
 
-        Log::info('Response: '.($maxLength ? substr($responseContents, 0, $maxLength).'...' : $responseContents));
+        Log::channel($this->channel)->info('Response: '.($maxLength ? substr($responseContents, 0, $maxLength).'...' : $responseContents));
     }
 
     /**
@@ -87,7 +94,7 @@ class Logger implements \RpContracts\Logger
         $contents = json_encode($requestData);
         $maxLength = self::REQUEST_AND_RESPONSE_LENGTH_LIMIT;
 
-        Log::info('Request params: '.($maxLength ? substr($contents, 0, $maxLength).'...' : $contents));
+        Log::channel($this->channel)->info('Request params: '.($maxLength ? substr($contents, 0, $maxLength).'...' : $contents));
     }
 
     /**
@@ -101,7 +108,7 @@ class Logger implements \RpContracts\Logger
 
         if(($this->strategy == self::STRATEGY_LOG_REQUESTS_WHEN_EXCEPTION) and !$result->isSuccess() and $errors)
         {
-            Log::error('Request failed. Url: '.($requestData['url'] ?? ''));
+            Log::channel($this->channel)->error('Request failed. Url: '.($requestData['url'] ?? ''));
             return true;
         }
         elseif($this->logExceptions() and $errors and array_search($result->getStatusCode(), $this->excludeStatusCodes) === false)
